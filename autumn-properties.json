@@ -1,8 +1,8 @@
 {
     "vrunner": {
-        "ibconnection": "/F./build/ib",
-        "db-user": "",
-        "db-pwd": "",
+        "ibconnection": "/F./build/noneTools",
+        "db-user": "admin",
+        "db-pwd": "12322",
         "root": ".",
         "workspace": ".",
         "v8version": "8.5",
