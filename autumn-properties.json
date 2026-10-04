@@ -17,8 +17,6 @@
                 "additional": "/DisplayAllFunctions /L ru /DisableStartupDialogs /DisableStartupMessages /AllowExecuteScheduledJobs -Off"
             },
             "xunit": {
-                "xddConfig": "./tools/xUnitParams.json",
-                "reportsxunit": "jUnit{build/out/smoke/junit/junit.xml};allure{build/out/smoke/allure/allure.xml}",
                 "xddExitCodePath": "./build/xddExitCodePath.txt",
                 "additional": "/DisplayAllFunctions /L ru /DisableStartupDialogs /DisableStartupMessages /AllowExecuteScheduledJobs -Off"
             },
@@ -27,8 +25,8 @@
                 "report-format": [
                     "junit"
                 ],
-                "report-path": "build/out/yaxunit/junit.xml",
-                "additional": "/DisplayAllFunctions /L ru /DisableStartupDialogs /DisableStartupMessages /AllowExecuteScheduledJobs -Off"
+                "report-path": "build/out/yaxunit/junit.xml"
+             
             }
         },
         "validate": {
@@ -49,6 +47,11 @@
                     "ThickClientOrdinaryApplication"
                 ]
             }
+        }
+    },
+    "logos": {
+        "logger": {
+            "vrunner": "INFO"
         }
     }
 }

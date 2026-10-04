@@ -1,19 +1,19 @@
 {
   "schemaVersion": 2,
-  "instanceId": "125473a2-87c3-49ce-a075-43a5c5f855ce",
-  "port": 52430,
-  "token": "a4bd5d30e0ac8c121aeef2c172764152aecea6b3b07fdd094d053a63beda7be3",
-  "pid": 24712,
+  "instanceId": "cc4edf7e-a5b1-4d1d-8c89-02ced4187717",
+  "port": 60538,
+  "token": "2e6c9c3cd7b6fc8b80ef496b93f41ff1f20bb52e2192949edddb1ca8dcfb97cf",
+  "pid": 16736,
   "workspaceFolder": "f:\\project\\tools",
-  "createdAt": "2026-10-04T07:29:44.728Z",
-  "extensionVersion": "0.53.6",
+  "createdAt": "2026-10-04T18:46:00.145Z",
+  "extensionVersion": "0.54.6",
   "docs": "https://github.com/lekot/VScodePluginFor1CDev/blob/main/docs/features/agent-api/agent-skill.md",
   "mcp": {
-    "url": "http://127.0.0.1:52430/mcp",
+    "url": "http://127.0.0.1:60538/mcp",
     "transport": "streamable-http",
     "authorization": "bearer"
   },
   "quickstart": "POST http://127.0.0.1:<port>/command с заголовком Authorization: Bearer <token>, телом {\"name\":\"1c-metadata-tree.agent.<cmd>\",\"args\":{...}}. Whitelist: /^1c-metadata-tree\\.agent(?:(?:\\.debug|\\.forms|\\.skd|\\.xdto)?\\.[a-zA-Z]+|\\.roles\\.setRights)$/. Для работы с формами используй agent.forms.start только с url готового веб-сервера или dbPath (и platformPath при необходимости). Для отладки BSL сначала вызови agent.debug.start с debuggeeType='webServer', затем открой возвращённый webServerUrl через Playwright. XDTO: agent.xdto.listPackages/getPackage/exportXsd/importXsd/createFromXsd/compare/merge. thinClient — нативное окно Windows, недоступно без ui-test.",
-  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.53.6\\resources\\agent-bridge\\call.sh",
-  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.53.6\\resources\\agent-bridge\\discover.sh"
+  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.54.6\\resources\\agent-bridge\\call.sh",
+  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.54.6\\resources\\agent-bridge\\discover.sh"
 }

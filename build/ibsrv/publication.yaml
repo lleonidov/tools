@@ -2,7 +2,7 @@ server:
   address: localhost
   port: 8314
 database:
-  path: f:\project\tools\build\ib
+  path: f:\project\tools\build\noneTools
 infobase:
   name: DefAlias
   distribute-licenses: yes
