@@ -64,7 +64,7 @@
 		<Metadata name="CommonModule.Всп_ОчередьНаРегистрах.Module" id="f876aeb6-6a3d-485e-9a2e-7324cafdd262.0" configVersion="1e0f33347c36c0fe6666c35eedfe3e83405d7d47"/>
 		<Metadata name="CommonTemplate.PinkRabbitMQ" id="e38bed25-c1fe-45c6-a2ee-fec4d821d711" configVersion="5e26ae82487f883363e8af9b19ee2add6a817e2d"/>
 		<Metadata name="CommonTemplate.PinkRabbitMQ.Template" id="e38bed25-c1fe-45c6-a2ee-fec4d821d711.0" configVersion="585febae9ea36f4a3603bf73befb09e59bd5b268"/>
-		<Metadata name="Configuration.ВспомогательныеИнструменты" id="dee33daf-7db8-49fb-8549-728d21aa45dd" configVersion="0de3bc79eb226e36986541e3b9b9afc1a8b5c7f2"/>
+		<Metadata name="Configuration.ВспомогательныеИнструменты" id="dee33daf-7db8-49fb-8549-728d21aa45dd" configVersion="22c61353c7d37adf45b1261434a509efc3c275a5"/>
 		<Metadata name="DataProcessor.Всп_Лог" id="bcb56052-60ea-4ad2-8188-be1405a0d197" configVersion="1ecb015c428a406370f4a2394c7dc5118f990a5d"/>
 		<Metadata name="DataProcessor.Всп_Лог.ManagerModule" id="bcb56052-60ea-4ad2-8188-be1405a0d197.2" configVersion="fbf620ec05a7b9ba30e04636926f0bd034d16d27"/>
 		<Metadata name="DataProcessor.Всп_Лог.ObjectModule" id="bcb56052-60ea-4ad2-8188-be1405a0d197.0" configVersion="110e51357783d562b6757c54d6559a7892304805"/>

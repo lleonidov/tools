@@ -31,12 +31,13 @@ $PlatformVersion = "8.5.1.1302"
 $BasePath = Join-Path $PSScriptRoot 'build\noneTools'
 $Base = "/F$BasePath"
 $Cfe = ".\build\out\cfe\$($config.name).cfe"
+$xmlPath = "$Source\Configuration.xml" # Путь к исходникам расширения
 
 $ErrorActionPreference = "Stop"
 
 # Устанавливаем новую версию
 # Читаем текущую версию
-$xmlPath = "$Source\Configuration.xml" # Путь к исходникам расширения
+
 
 $contentConfig = Get-Content -Path $xmlPath -Raw -Encoding UTF8
 
