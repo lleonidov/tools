@@ -61,19 +61,16 @@ $Cfe = ".\build\out\cfe\$($config.name).cfe"
 $Version = "$($config.version)"
 $ErrorActionPreference = "Stop"
 
-$VersionRunner = Join-Path $PSScriptRoot `
-    'tools\vrunner-2.6\oscript_modules\bin\vrunner.bat'
-
 # Устанавливаем версию в исходниках расширения
-$ConfigurationFile = Join-Path $PSScriptRoot "$Source\Configuration.xml"
 
-& $VersionRunner set-version `
-    --src $ConfigurationFile `
-    --new-version $Version
+$xmlPath = "$Source\Configuration.xml" # Путь к исходникам расширения
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Ошибка установки версии CFE. Код: $LASTEXITCODE"
-}
+$content = Get-Content -Path $xmlPath -Raw -Encoding UTF8
+# Ищем всё, что находится между <Version> и </Version> и заменяем
+$content = $content -replace '(?<=<Version>).*?(?=</Version>)', $Version
+
+Set-Content -Path $xmlPath -Value $content -Encoding UTF8
+Write-Host "Версия расширения успешно обновлена на $Version"
 
 # Собираем CFE
 
