@@ -1,19 +1,19 @@
 {
   "schemaVersion": 2,
-  "instanceId": "cc4edf7e-a5b1-4d1d-8c89-02ced4187717",
-  "port": 60538,
-  "token": "2e6c9c3cd7b6fc8b80ef496b93f41ff1f20bb52e2192949edddb1ca8dcfb97cf",
-  "pid": 16736,
+  "instanceId": "ed3d5ba4-07f2-4d7f-9da6-c7597e9f2af4",
+  "port": 63219,
+  "token": "91a41e38868dbae8b317c9428d5911e9a83fa2115202d90e66eecf6d4206ee7a",
+  "pid": 17440,
   "workspaceFolder": "f:\\project\\tools",
-  "createdAt": "2026-10-04T18:46:00.145Z",
-  "extensionVersion": "0.54.6",
+  "createdAt": "2026-10-14T16:30:47.731Z",
+  "extensionVersion": "0.56.2",
   "docs": "https://github.com/lekot/VScodePluginFor1CDev/blob/main/docs/features/agent-api/agent-skill.md",
   "mcp": {
-    "url": "http://127.0.0.1:60538/mcp",
+    "url": "http://127.0.0.1:63219/mcp",
     "transport": "streamable-http",
     "authorization": "bearer"
   },
-  "quickstart": "POST http://127.0.0.1:<port>/command с заголовком Authorization: Bearer <token>, телом {\"name\":\"1c-metadata-tree.agent.<cmd>\",\"args\":{...}}. Whitelist: /^1c-metadata-tree\\.agent(?:(?:\\.debug|\\.forms|\\.skd|\\.xdto)?\\.[a-zA-Z]+|\\.roles\\.setRights)$/. Для работы с формами используй agent.forms.start только с url готового веб-сервера или dbPath (и platformPath при необходимости). Для отладки BSL сначала вызови agent.debug.start с debuggeeType='webServer', затем открой возвращённый webServerUrl через Playwright. XDTO: agent.xdto.listPackages/getPackage/exportXsd/importXsd/createFromXsd/compare/merge. thinClient — нативное окно Windows, недоступно без ui-test.",
-  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.54.6\\resources\\agent-bridge\\call.sh",
-  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.54.6\\resources\\agent-bridge\\discover.sh"
+  "quickstart": "POST http://127.0.0.1:<port>/command с заголовком Authorization: Bearer <token>, телом {\"name\":\"1c-metadata-tree.agent.<cmd>\",\"args\":{...}}. Whitelist: /^1c-metadata-tree\\.agent(?:(?:\\.debug|\\.forms|\\.skd|\\.xdto)?\\.[a-zA-Z]+|\\.roles\\.setRights)$/. Forms: forms.discover ищет локальные TestClient (возвращает только PID/port), forms.launch запускает его и подключает native-сессию для dbPath или infobaseId, а forms.start подключается к уже работающему клиенту по TCP port (driver=native можно опустить, host по умолчанию 127.0.0.1); forms.native управляет формой, forms.stop закрывает только сокет. forms.shot снимает окно локального TestClient на Windows. Для отладки BSL вызови agent.debug.start с debuggeeType=webServer и открой возвращённый webServerUrl в браузере. XDTO: agent.xdto.listPackages/getPackage/exportXsd/importXsd/createFromXsd/compare/merge.",
+  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.56.2\\resources\\agent-bridge\\call.sh",
+  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.56.2\\resources\\agent-bridge\\discover.sh"
 }
