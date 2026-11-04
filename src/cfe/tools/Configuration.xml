@@ -54,7 +54,7 @@
 				<xr:Item xsi:type="xr:MDObjectRef">Role.Всп_ОсновнаяРоль</xr:Item>
 			</DefaultRoles>
 			<Vendor/>
-			<Version>1.0.0.25</Version>
+			<Version>1.0.0.32</Version>
 			<Caption/>
 			<ShortCaption/>
 			<DefaultLanguage>Language.Русский</DefaultLanguage>
@@ -88,6 +88,7 @@
 			<CommonModule>Всп_МногопоточностьВызовСервера</CommonModule>
 			<CommonModule>Всп_МногопоточностьТест</CommonModule>
 			<CommonModule>Всп_Метрики</CommonModule>
+			<CommonModule>Всп_ЗамерВремени</CommonModule>
 			<Catalog>Всп_ВидКонтекста</Catalog>
 			<Catalog>Всп_КонтекстРазмещение</Catalog>
 			<Catalog>Всп_Контекст</Catalog>

@@ -1,4 +1,5 @@
 ﻿# Инициалзилация файла настроек
+$ErrorActionPreference = "Stop"
 $config = @{}
 
 # Имя=значение; кавычки необязательны; после значения возможен комментарий.
@@ -23,57 +24,56 @@ foreach ($line in Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorActi
 # Параметры 
 
 $Runner = "vrunner"
-$Source = "src\cfe\$($config.name)"
-$Output = "build\out\cfe\$($config.name).cfe"
-$ExtensionName = "$($config.nameRus)"
+$Source = Join-Path $PSScriptRoot "src\cfe\$($config.name)"
+$Output = Join-Path $PSScriptRoot "build\out\cfe\$($config.name).cfe"
+# Имя расширения берём из метаданных исходников.
+$xmlPath = Join-Path $Source 'Configuration.xml'
+$contentConfig = Get-Content -LiteralPath $xmlPath -Raw -Encoding UTF8
+$configuration = [xml]$contentConfig
+$ExtensionName = [string]$configuration.DocumentElement.Configuration.Properties.Name
 $PlatformVersion = "8.5.1.1302"
+$BuildSettings = Join-Path $PSScriptRoot 'buildOnlyCfe.settings.json'
+$TargetSettings = Join-Path $PSScriptRoot 'autumn-properties.json'
 
-$BasePath = Join-Path $PSScriptRoot 'build\noneTools'
-$Base = "/F$BasePath"
-$Cfe = ".\build\out\cfe\$($config.name).cfe"
-$xmlPath = "$Source\Configuration.xml" # Путь к исходникам расширения
+# Сборка выполняется в отдельной базе.
+$BuildBasePath = Join-Path $PSScriptRoot 'build\cfeBuild'
+$BuildBase = "/F$BuildBasePath"
 
-$ErrorActionPreference = "Stop"
+# Готовое расширение загружается в целевую базу.
+$TargetBasePath = Join-Path $PSScriptRoot 'build\noneTools'
+$TargetBase = "/F$TargetBasePath"
 
-# Устанавливаем новую версию
-# Читаем текущую версию
-
-
-$contentConfig = Get-Content -Path $xmlPath -Raw -Encoding UTF8
-
-# Читаем старую версию с помощью регулярного выражения
-if ($contentConfig -match '<Version>(.*?)</Version>') {
-    $oldVersion = $matches[1]
-    Write-Host "Текущая (старая) версия расширения: $oldVersion"
-    
-    # Опционально: экспорт переменной для других шагов пайплайна
-    # Например, для GitLab CI (сохранение в dotenv) или GitHub Actions:
-    # echo "OLD_VERSION=$oldVersion" >> $env:GITHUB_ENV
-} else {
-    Write-Error "Тег <Version> не найден в файле $xmlPath!"
-    exit 1 # Роняем пайплайн, если что-то пошло не так
+if (-not (Test-Path -LiteralPath (Join-Path $BuildBasePath '1Cv8.1CD') -PathType Leaf)) {
+    throw "База для сборки CFE не найдена: $BuildBasePath"
 }
 
-# Увеличим версию
+if (-not (Test-Path -LiteralPath (Join-Path $TargetBasePath '1Cv8.1CD') -PathType Leaf)) {
+    throw "Целевая база для загрузки CFE не найдена: $TargetBasePath"
+}
+
+# Увеличиваем последнюю часть версии перед сборкой.
+$oldVersion = [string]$configuration.DocumentElement.Configuration.Properties.Version
+if ($oldVersion -notmatch '^\d+(?:\.\d+)*$') {
+    throw "Некорректная версия расширения в ${xmlPath}: $oldVersion"
+}
+
 $parts = $oldVersion.Split('.')
 $parts[-1] = ([long]$parts[-1] + 1).ToString()
 $newVersion = $parts -join '.'
-# Сохраним в файле настроек
 
-# Читаем содержимое файла
-$contentEnv = Get-Content -Path $configPath
+# Меняем только ASCII-строку версии, сохраняя остальные байты config.env.
+$configEncoding = [System.Text.Encoding]::GetEncoding(28591)
+$contentEnv = $configEncoding.GetString([System.IO.File]::ReadAllBytes($configPath))
+$versionPattern = '(?m)^[ \t]*version[ \t]*=[^\r\n]*'
+if ($contentEnv -notmatch $versionPattern) {
+    throw "Строка version= не найдена в $configPath"
+}
+$updatedContent = $contentEnv -replace $versionPattern, "version=$newVersion"
+[System.IO.File]::WriteAllBytes($configPath, $configEncoding.GetBytes($updatedContent))
 
-# Заменяем строку, начинающуюся на 'version=', подставляя новую версию
-$updatedContent = $contentEnv -replace '^version=.*', "version=$newVersion"
-
-# Записываем обновленные данные обратно в файл
-$updatedContent | Set-Content -Path $configPath
-
-# Ищем всё, что находится между <Version> и </Version> и заменяем
 $contentConfig = $contentConfig -replace '(?<=<Version>).*?(?=</Version>)', $newVersion
-
-Set-Content -Path $xmlPath -Value $contentConfig -Encoding UTF8
-Write-Host "Версия расширения успешно обновлена на $newVersion"
+Set-Content -LiteralPath $xmlPath -Value $contentConfig -Encoding UTF8 -NoNewline
+Write-Host "Версия расширения успешно обновлена: $oldVersion -> $newVersion"
 
 # Собираем CFE
 
@@ -85,6 +85,8 @@ New-Item -ItemType Directory -Path (Split-Path $Output) -Force | Out-Null
     --src $Source `
     --extension-name $ExtensionName `
     --v8version $PlatformVersion `
+    --ibconnection $BuildBase `
+    --settings $BuildSettings `
     $Output
 
 if ($LASTEXITCODE -ne 0) {
@@ -93,8 +95,15 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "Собрано: $Output"
 
-& $Runner cfe load --ibconnection $Base --extension-name $ExtensionName $Cfe
+& $Runner cfe load `
+    --ibconnection $TargetBase `
+    --extension-name $ExtensionName `
+    --v8version $PlatformVersion `
+    --settings $TargetSettings `
+    $Output
 
 if ($LASTEXITCODE -ne 0) {
     throw "Ошибка загрузки расширения. Код: $LASTEXITCODE"
 }
+
+Write-Host "Расширение загружено в: $TargetBasePath"

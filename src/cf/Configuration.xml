@@ -265,6 +265,7 @@
 		<ChildObjects>
 			<Language>Русский</Language>
 			<Role>ПолныеПрава</Role>
+			<CommonModule>ВебСокет</CommonModule>
 			<Catalog>Справочник</Catalog>
 		</ChildObjects>
 	</Configuration>

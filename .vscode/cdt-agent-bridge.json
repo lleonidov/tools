@@ -1,19 +1,19 @@
 {
   "schemaVersion": 2,
-  "instanceId": "ed3d5ba4-07f2-4d7f-9da6-c7597e9f2af4",
-  "port": 63219,
-  "token": "91a41e38868dbae8b317c9428d5911e9a83fa2115202d90e66eecf6d4206ee7a",
-  "pid": 17440,
+  "instanceId": "bcbcb889-5440-4614-af2e-19656e65bfdb",
+  "port": 50922,
+  "token": "6c4936fa483f465e9ddd3675b296ebae6e1a6891e5ce5d07812cad2fe84887e5",
+  "pid": 20024,
   "workspaceFolder": "f:\\project\\tools",
-  "createdAt": "2026-10-14T16:30:47.731Z",
-  "extensionVersion": "0.56.2",
+  "createdAt": "2026-11-04T14:34:46.529Z",
+  "extensionVersion": "0.60.2",
   "docs": "https://github.com/lekot/VScodePluginFor1CDev/blob/main/docs/features/agent-api/agent-skill.md",
   "mcp": {
-    "url": "http://127.0.0.1:63219/mcp",
+    "url": "http://127.0.0.1:50922/mcp",
     "transport": "streamable-http",
     "authorization": "bearer"
   },
   "quickstart": "POST http://127.0.0.1:<port>/command с заголовком Authorization: Bearer <token>, телом {\"name\":\"1c-metadata-tree.agent.<cmd>\",\"args\":{...}}. Whitelist: /^1c-metadata-tree\\.agent(?:(?:\\.debug|\\.forms|\\.skd|\\.xdto)?\\.[a-zA-Z]+|\\.roles\\.setRights)$/. Forms: forms.discover ищет локальные TestClient (возвращает только PID/port), forms.launch запускает его и подключает native-сессию для dbPath или infobaseId, а forms.start подключается к уже работающему клиенту по TCP port (driver=native можно опустить, host по умолчанию 127.0.0.1); forms.native управляет формой, forms.stop закрывает только сокет. forms.shot снимает окно локального TestClient на Windows. Для отладки BSL вызови agent.debug.start с debuggeeType=webServer и открой возвращённый webServerUrl в браузере. XDTO: agent.xdto.listPackages/getPackage/exportXsd/importXsd/createFromXsd/compare/merge.",
-  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.56.2\\resources\\agent-bridge\\call.sh",
-  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.56.2\\resources\\agent-bridge\\discover.sh"
+  "helperScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.60.2\\resources\\agent-bridge\\call.sh",
+  "discoverScriptPath": "c:\\Users\\lev\\.vscode\\extensions\\lekot.1c-metadata-tree-vscode-0.60.2\\resources\\agent-bridge\\discover.sh"
 }
