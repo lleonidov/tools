@@ -1,15 +1,15 @@
 {
   "schemaVersion": 2,
-  "instanceId": "bcbcb889-5440-4614-af2e-19656e65bfdb",
-  "port": 50922,
-  "token": "6c4936fa483f465e9ddd3675b296ebae6e1a6891e5ce5d07812cad2fe84887e5",
-  "pid": 20024,
+  "instanceId": "e8df6560-4976-4d46-a7b8-e99e18cd9ab0",
+  "port": 51759,
+  "token": "9ad2181756ac80838a616b94513328115bd5547cfb2dee394f8953cbb383d6af",
+  "pid": 23524,
   "workspaceFolder": "f:\\project\\tools",
-  "createdAt": "2026-11-04T14:34:46.529Z",
+  "createdAt": "2026-11-04T14:38:51.608Z",
   "extensionVersion": "0.60.2",
   "docs": "https://github.com/lekot/VScodePluginFor1CDev/blob/main/docs/features/agent-api/agent-skill.md",
   "mcp": {
-    "url": "http://127.0.0.1:50922/mcp",
+    "url": "http://127.0.0.1:51759/mcp",
     "transport": "streamable-http",
     "authorization": "bearer"
   },
