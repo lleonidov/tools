@@ -24,23 +24,33 @@ foreach ($line in $Content) {
 # Параметры 
 
 $Runner = "vrunner"
-$Source = "src\cfe\$($config.name)"
-$Output = "build\out\cfe\$($config.name).cfe"
+$Source = Join-Path (Join-Path $PSScriptRoot 'src/cfe') $config.name
+$OutputDir = Join-Path $PSScriptRoot 'build/out/cfe'
 $ExtensionName = "$($config.nameRus)"
-$PlatformVersion = "8.5.1.1302"
+. (Join-Path $PSScriptRoot 'get-platform-version.ps1')
+$PlatformVersion = Get-LocalPlatformVersion
 
-$BasePath = Join-Path $PSScriptRoot 'build\noneTools'
+$BasePath = Get-LocalSetting 'BASE'
+if (-not [System.IO.Path]::IsPathRooted($BasePath)) {
+    throw 'Путь BASE в .env должен быть абсолютным'
+}
+if (-not (Test-Path -LiteralPath (Join-Path $BasePath '1Cv8.1CD') -PathType Leaf)) {
+    throw "Файловая база 1С не найдена: $BasePath"
+}
 $Base = "/F$BasePath"
-$Cfe = ".\build\out\cfe\$($config.name).cfe"
+$Cfe = Join-Path $OutputDir "$($config.name).cfe"
 $Version = "$($config.version)"
-$xmlPath = "$Source\Configuration.xml" # Путь к исходникам расширения
+$xmlPath = Join-Path $Source 'Configuration.xml' # Путь к исходникам расширения
 $ErrorActionPreference = "Stop"
 
-New-Item -ItemType Directory -Path '.\build\out\cfe' -Force | Out-Null
+Push-Location -LiteralPath $PSScriptRoot
+try {
+New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
 & $Runner cfe unload `
     --ibconnection "$Base" `
     --extension-name "$ExtensionName" `
+    --v8version $PlatformVersion `
     "$Cfe"
 
 if ($LASTEXITCODE -ne 0) {
@@ -48,7 +58,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 & $Runner cfe decompile `
-    --cfe-file $Cfe `
+    --ibconnection $Base `
     --extension-name $ExtensionName `
     --v8version $PlatformVersion `
     --src-format xml `
@@ -76,3 +86,6 @@ $updatedContent = ($Content) `
     -replace '^\s*version\s*=.*$', "version=$Version"
 
 $updatedContent | Set-Content -LiteralPath $configPath -Encoding UTF8
+} finally {
+    Pop-Location
+}

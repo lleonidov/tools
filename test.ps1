@@ -1,21 +1,30 @@
 ﻿# Параметры 
 
 $Runner = "vrunner"
-$PlatformVersion = "8.5.1.1302"
+. (Join-Path $PSScriptRoot 'get-platform-version.ps1')
+$PlatformVersion = Get-LocalPlatformVersion
 
-$BasePath = Join-Path $PSScriptRoot 'build\noneTools'
+$BasePath = Join-Path $PSScriptRoot 'build/noneTools'
+$TestsSourcePath = Join-Path $PSScriptRoot 'src/tests/epf'
+$TestsOutputPath = Join-Path $PSScriptRoot 'build/out/tests/epf'
+$ReportsPath = Join-Path $PSScriptRoot 'build/reports'
+$JUnitReportPath = Join-Path $ReportsPath 'xunit.xml'
+$StatusPath = Join-Path $ReportsPath 'xunit-status.txt'
+$ReportPath = Join-Path $ReportsPath 'tests.md'
+
+Push-Location -LiteralPath $PSScriptRoot
+try {
 
 # Сначала собираем все тестовые обработки
 & $Runner epf compile --recursive `
-    --out .\build\out\tests\epf `
+    --out $TestsOutputPath `
     --v8version $PlatformVersion `
-    .\src\tests\epf
+    $TestsSourcePath
 
 if ($LASTEXITCODE -ne 0) {
     throw 'Не удалось собрать тесты'
 }
 
-$ReportsPath = Join-Path $PSScriptRoot 'build\reports'
 New-Item -ItemType Directory -Path $ReportsPath -Force -ErrorAction Stop | Out-Null
 
 Get-ChildItem -LiteralPath $ReportsPath -File -Recurse |
@@ -27,17 +36,17 @@ Get-ChildItem -LiteralPath $ReportsPath -File -Recurse |
 & $Runner test xunit `
     --ibconnection "/F$BasePath" `
     --report-format junit `
-    --report-path .\build\reports\xunit.xml `
-    --xddExitCodePath .\build\reports\xunit-status.txt `
+    --report-path $JUnitReportPath `
+    --xddExitCodePath $StatusPath `
     --v8version $PlatformVersion `
-    .\build\out\tests\epf
+    $TestsOutputPath
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error 'Прогон тестов завершился с ошибкой'
 }
 
 $rows = @(
-    Get-ChildItem .\build\reports -Recurse -Filter '*-result.xml' |
+    Get-ChildItem -LiteralPath $ReportsPath -Recurse -Filter '*-result.xml' |
         ForEach-Object {
             [xml]$doc = Get-Content -LiteralPath $_.FullName -Encoding UTF8
             foreach ($test in $doc.SelectNodes('//testcase')) {
@@ -52,7 +61,7 @@ $rows = @(
         }
 )
 
-$code = (Get-Content .\build\reports\xunit-status.txt).Trim()
+$code = (Get-Content -LiteralPath $StatusPath).Trim()
 $verdict = if ($code -eq '0') { 'Тесты пройдены' } else { 'Тесты не прошли' }
 
 $md = @(
@@ -76,5 +85,7 @@ foreach ($row in $rows) {
     $md += '| ' + ($cells -join ' | ') + ' |'
 }
 
-$ReportPath = Join-Path $PSScriptRoot 'build\reports\tests.md'
 $md | Set-Content -LiteralPath $ReportPath -Encoding UTF8
+} finally {
+    Pop-Location
+}

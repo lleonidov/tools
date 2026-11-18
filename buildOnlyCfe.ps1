@@ -29,12 +29,22 @@ $Output = Join-Path $PSScriptRoot "build\out\cfe\$($config.name).cfe"
 # Имя расширения берём из метаданных исходников.
 $configuration = [xml](Get-Content -LiteralPath (Join-Path $Source 'Configuration.xml') -Raw -Encoding UTF8)
 $ExtensionName = [string]$configuration.DocumentElement.Configuration.Properties.Name
-$PlatformVersion = "8.5.1.1302"
-$RunnerSettings = Join-Path $PSScriptRoot 'buildOnlyCfe.settings.json'
+. (Join-Path $PSScriptRoot 'get-platform-version.ps1')
+$PlatformVersion = Get-LocalPlatformVersion
+$RunnerSettings = Join-Path $PSScriptRoot 'autumn-properties.json'
 
-# Используем отдельную базу, чтобы сборка не меняла тестовую.
-$BasePath = Join-Path $PSScriptRoot 'build\cfeBuild'
-$Base = "/F$BasePath"
+# Используем файловую базу из общих настроек Vanessa Runner.
+$settings = Get-Content -LiteralPath $RunnerSettings -Raw -Encoding UTF8 | ConvertFrom-Json
+$connection = [string]$settings.vrunner.ibconnection
+if ($connection -notmatch '^\s*/F\s*(?:"(?<path>[^"]+)"|(?<path>.+?))\s*$') {
+    throw 'В autumn-properties.json нужна строка подключения к файловой базе /F'
+}
+$BasePath = $Matches.path
+if (-not [System.IO.Path]::IsPathRooted($BasePath)) {
+    $BasePath = Join-Path $PSScriptRoot $BasePath
+}
+$BasePath = [System.IO.Path]::GetFullPath($BasePath)
+$Base = '/F"' + $BasePath + '"'
 
 if (-not (Test-Path -LiteralPath (Join-Path $BasePath '1Cv8.1CD') -PathType Leaf)) {
     throw "База для сборки CFE не найдена: $BasePath"

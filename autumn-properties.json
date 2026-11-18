@@ -1,7 +1,7 @@
 {
     "vrunner": {
         "ibconnection": "/F./build/noneTools",
-        "db-user": "admin",
+        "db-user": "Admin",
         "db-pwd": "12322",
         "root": ".",
         "workspace": ".",
