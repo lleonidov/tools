@@ -8,7 +8,7 @@ version_url=${version//./_}
 install_dir="${HOME}/.local/opt/onescript-${version}"
 bin_dir="${HOME}/.local/bin"
 download_url="https://oscript.io/downloads/${version_url}/scd-lin/x64"
-project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 runner_script="$project_dir/oscript_modules/vanessa-runner/src/main.os"
 
 if [[ $(uname -s) != Linux || $(uname -m) != x86_64 ]]; then

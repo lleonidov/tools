@@ -1,5 +1,6 @@
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
 $ErrorActionPreference = 'Stop'
-$configPath = Join-Path $PSScriptRoot 'config.env'
+$configPath = Join-Path $ProjectRoot 'config.env'
 $config = @{}
 $pattern = '^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*' +
            '(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
@@ -29,11 +30,11 @@ if (-not (Test-Path -LiteralPath (Join-Path $BasePath '1Cv8.1CD') -PathType Leaf
 }
 
 $Base = "/F$BasePath"
-$Source = Join-Path $PSScriptRoot 'src/cf'
-$OutputDir = Join-Path $PSScriptRoot 'build/out/cf'
+$Source = Join-Path $ProjectRoot 'src/cf'
+$OutputDir = Join-Path $ProjectRoot 'build/out/cf'
 $Cf = Join-Path $OutputDir "$($config.name).cf"
 
-Push-Location -LiteralPath $PSScriptRoot
+Push-Location -LiteralPath $ProjectRoot
 try {
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 

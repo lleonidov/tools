@@ -1,4 +1,5 @@
-﻿# Инициалзилация файла настроек
+﻿$ProjectRoot = Split-Path $PSScriptRoot -Parent
+# Инициалзилация файла настроек
 $ErrorActionPreference = "Stop"
 $config = @{}
 
@@ -6,7 +7,7 @@ $config = @{}
 $pattern = '^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*' +
            '(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
 
-$configPath = Join-Path $PSScriptRoot 'config.env'
+$configPath = Join-Path $ProjectRoot 'config.env'
 
 foreach ($line in Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorAction Stop) {
     # Пропускаем пустые строки и отдельные комментарии.
@@ -24,14 +25,14 @@ foreach ($line in Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorActi
 # Параметры 
 
 $Runner = "vrunner"
-$Source = Join-Path $PSScriptRoot "src\cfe\$($config.name)"
-$Output = Join-Path $PSScriptRoot "build\out\cfe\$($config.name).cfe"
+$Source = Join-Path $ProjectRoot "src\cfe\$($config.name)"
+$Output = Join-Path $ProjectRoot "build\out\cfe\$($config.name).cfe"
 # Имя расширения берём из метаданных исходников.
 $configuration = [xml](Get-Content -LiteralPath (Join-Path $Source 'Configuration.xml') -Raw -Encoding UTF8)
 $ExtensionName = [string]$configuration.DocumentElement.Configuration.Properties.Name
 . (Join-Path $PSScriptRoot 'get-platform-version.ps1')
 $PlatformVersion = Get-LocalPlatformVersion
-$RunnerSettings = Join-Path $PSScriptRoot 'autumn-properties.json'
+$RunnerSettings = Join-Path $ProjectRoot 'autumn-properties.json'
 
 # Используем файловую базу из общих настроек Vanessa Runner.
 $settings = Get-Content -LiteralPath $RunnerSettings -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -41,7 +42,7 @@ if ($connection -notmatch '^\s*/F\s*(?:"(?<path>[^"]+)"|(?<path>.+?))\s*$') {
 }
 $BasePath = $Matches.path
 if (-not [System.IO.Path]::IsPathRooted($BasePath)) {
-    $BasePath = Join-Path $PSScriptRoot $BasePath
+    $BasePath = Join-Path $ProjectRoot $BasePath
 }
 $BasePath = [System.IO.Path]::GetFullPath($BasePath)
 $Base = '/F"' + $BasePath + '"'

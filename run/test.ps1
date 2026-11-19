@@ -1,4 +1,5 @@
-﻿# Параметры 
+﻿$ProjectRoot = Split-Path $PSScriptRoot -Parent
+# Параметры 
 
 $Runner = "vrunner"
 . (Join-Path $PSScriptRoot 'get-platform-version.ps1')
@@ -14,18 +15,18 @@ if (-not (Test-Path -LiteralPath (Join-Path $BasePath '1Cv8.1CD') -PathType Leaf
 $DbUser = Get-LocalSetting 'DB_USER' -AllowEmpty
 $DbPassword = Get-LocalSetting 'DB_PASSWORD' -AllowEmpty
 $Base = '/F"' + $BasePath + '"'
-$TestsSourcePath = Join-Path $PSScriptRoot 'src/tests/epf'
-$TestsOutputPath = Join-Path $PSScriptRoot 'build/out/tests/epf'
-$XunitRunnerPath = Join-Path $PSScriptRoot 'oscript_modules/add/xddTestRunner.epf'
+$TestsSourcePath = Join-Path $ProjectRoot 'src/tests/epf'
+$TestsOutputPath = Join-Path $ProjectRoot 'build/out/tests/epf'
+$XunitRunnerPath = Join-Path $ProjectRoot 'oscript_modules/add/xddTestRunner.epf'
 if (-not (Test-Path -LiteralPath $XunitRunnerPath -PathType Leaf)) {
     throw 'Не найдена обработка Vanessa-ADD: установите зависимости проекта через opm install --local'
 }
-$ReportsPath = Join-Path $PSScriptRoot 'build/reports'
+$ReportsPath = Join-Path $ProjectRoot 'build/reports'
 $JUnitReportPath = Join-Path $ReportsPath 'xunit.xml'
 $StatusPath = Join-Path $ReportsPath 'xunit-status.txt'
 $ReportPath = Join-Path $ReportsPath 'tests.md'
 
-Push-Location -LiteralPath $PSScriptRoot
+Push-Location -LiteralPath $ProjectRoot
 $TemporarySettings = $null
 try {
 

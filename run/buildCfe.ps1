@@ -1,4 +1,5 @@
-﻿# Инициалзилация файла настроек
+﻿$ProjectRoot = Split-Path $PSScriptRoot -Parent
+# Инициалзилация файла настроек
 $ErrorActionPreference = "Stop"
 $config = @{}
 
@@ -6,7 +7,7 @@ $config = @{}
 $pattern = '^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*' +
            '(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
 
-$configPath = Join-Path $PSScriptRoot 'config.env'
+$configPath = Join-Path $ProjectRoot 'config.env'
 
 foreach ($line in Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorAction Stop) {
     # Пропускаем пустые строки и отдельные комментарии.
@@ -24,8 +25,8 @@ foreach ($line in Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorActi
 # Параметры 
 
 $Runner = "vrunner"
-$Source = Join-Path $PSScriptRoot "src\cfe\$($config.name)"
-$Output = Join-Path $PSScriptRoot "build\out\cfe\$($config.name).cfe"
+$Source = Join-Path $ProjectRoot "src\cfe\$($config.name)"
+$Output = Join-Path $ProjectRoot "build\out\cfe\$($config.name).cfe"
 # Имя расширения берём из метаданных исходников.
 $xmlPath = Join-Path $Source 'Configuration.xml'
 $contentConfig = Get-Content -LiteralPath $xmlPath -Raw -Encoding UTF8
@@ -33,7 +34,7 @@ $configuration = [xml]$contentConfig
 $ExtensionName = [string]$configuration.DocumentElement.Configuration.Properties.Name
 . (Join-Path $PSScriptRoot 'get-platform-version.ps1')
 $PlatformVersion = Get-LocalPlatformVersion
-$BuildSettings = Join-Path $PSScriptRoot 'autumn-properties.json'
+$BuildSettings = Join-Path $ProjectRoot 'autumn-properties.json'
 $TargetSettings = $BuildSettings
 
 # Сборка выполняется в базе из настроек Vanessa Runner.
@@ -44,7 +45,7 @@ if ($connection -notmatch '^\s*/F\s*(?:"(?<path>[^"]+)"|(?<path>.+?))\s*$') {
 }
 $BuildBasePath = $Matches.path
 if (-not [System.IO.Path]::IsPathRooted($BuildBasePath)) {
-    $BuildBasePath = Join-Path $PSScriptRoot $BuildBasePath
+    $BuildBasePath = Join-Path $ProjectRoot $BuildBasePath
 }
 $BuildBasePath = [System.IO.Path]::GetFullPath($BuildBasePath)
 $BuildBase = '/F"' + $BuildBasePath + '"'

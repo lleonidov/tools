@@ -1,7 +1,7 @@
 function Get-LocalSetting {
     param([Parameter(Mandatory)][string]$Name, [switch]$AllowEmpty)
 
-    $envPath = Join-Path $PSScriptRoot '.env'
+    $envPath = Join-Path (Split-Path $PSScriptRoot -Parent) '.env'
     $pattern = '^\s*' + [regex]::Escape($Name) + '\s*=\s*(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
     $value = $null
 

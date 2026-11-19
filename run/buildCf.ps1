@@ -1,6 +1,7 @@
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
 $ErrorActionPreference = 'Stop'
 $config = @{}
-$configPath = Join-Path $PSScriptRoot 'config.env'
+$configPath = Join-Path $ProjectRoot 'config.env'
 $pattern = '^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*' +
            '(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
 
@@ -15,7 +16,7 @@ if ([string]::IsNullOrWhiteSpace($config.name)) {
 
 . (Join-Path $PSScriptRoot 'get-platform-version.ps1')
 $PlatformVersion = Get-LocalPlatformVersion
-$SettingsPath = Join-Path $PSScriptRoot 'autumn-properties.json'
+$SettingsPath = Join-Path $ProjectRoot 'autumn-properties.json'
 $settings = Get-Content -LiteralPath $SettingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $connection = [string]$settings.vrunner.ibconnection
 if ($connection -notmatch '^\s*/F\s*(?:"(?<path>[^"]+)"|(?<path>.+?))\s*$') {
@@ -23,7 +24,7 @@ if ($connection -notmatch '^\s*/F\s*(?:"(?<path>[^"]+)"|(?<path>.+?))\s*$') {
 }
 $BuildBasePath = $Matches.path
 if (-not [System.IO.Path]::IsPathRooted($BuildBasePath)) {
-    $BuildBasePath = Join-Path $PSScriptRoot $BuildBasePath
+    $BuildBasePath = Join-Path $ProjectRoot $BuildBasePath
 }
 $BuildBasePath = [System.IO.Path]::GetFullPath($BuildBasePath)
 $TargetBasePath = Get-LocalSetting 'BASE'
@@ -38,8 +39,8 @@ foreach ($path in @($BuildBasePath, $TargetBasePath)) {
 
 $BuildBase = '/F"' + $BuildBasePath + '"'
 $TargetBase = '/F"' + $TargetBasePath + '"'
-$Source = Join-Path $PSScriptRoot 'src/cf'
-$OutputDir = Join-Path $PSScriptRoot 'build/out/cf'
+$Source = Join-Path $ProjectRoot 'src/cf'
+$OutputDir = Join-Path $ProjectRoot 'build/out/cf'
 $Output = Join-Path $OutputDir "$($config.name).cf"
 $xmlPath = Join-Path $Source 'Configuration.xml'
 if (-not (Test-Path -LiteralPath $xmlPath -PathType Leaf)) {
@@ -73,7 +74,7 @@ $updatedXml = [regex]::Replace($xmlContent, $xmlPattern, "<Version>$newVersion</
 [System.IO.File]::WriteAllBytes($xmlPath, $byteEncoding.GetBytes($updatedXml))
 Write-Host "Версия конфигурации обновлена: $oldVersion -> $newVersion"
 
-Push-Location -LiteralPath $PSScriptRoot
+Push-Location -LiteralPath $ProjectRoot
 try {
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
     & vrunner cf compile `

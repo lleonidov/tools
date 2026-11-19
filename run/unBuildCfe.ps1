@@ -1,11 +1,12 @@
-﻿# Инициалзилация файла настроек
+﻿$ProjectRoot = Split-Path $PSScriptRoot -Parent
+# Инициалзилация файла настроек
 $config = @{}
 
 # Имя=значение; кавычки необязательны; после значения возможен комментарий.
 $pattern = '^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*' +
            '(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
 
-$configPath = Join-Path $PSScriptRoot 'config.env'
+$configPath = Join-Path $ProjectRoot 'config.env'
 $Content = Get-Content -LiteralPath $configPath -Encoding UTF8 -ErrorAction Stop
 
 foreach ($line in $Content) {
@@ -24,8 +25,8 @@ foreach ($line in $Content) {
 # Параметры 
 
 $Runner = "vrunner"
-$Source = Join-Path (Join-Path $PSScriptRoot 'src/cfe') $config.name
-$OutputDir = Join-Path $PSScriptRoot 'build/out/cfe'
+$Source = Join-Path (Join-Path $ProjectRoot 'src/cfe') $config.name
+$OutputDir = Join-Path $ProjectRoot 'build/out/cfe'
 $ExtensionName = "$($config.nameRus)"
 . (Join-Path $PSScriptRoot 'get-platform-version.ps1')
 $PlatformVersion = Get-LocalPlatformVersion
@@ -43,7 +44,7 @@ $Version = "$($config.version)"
 $xmlPath = Join-Path $Source 'Configuration.xml' # Путь к исходникам расширения
 $ErrorActionPreference = "Stop"
 
-Push-Location -LiteralPath $PSScriptRoot
+Push-Location -LiteralPath $ProjectRoot
 try {
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 
