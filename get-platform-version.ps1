@@ -1,5 +1,5 @@
 function Get-LocalSetting {
-    param([Parameter(Mandatory)][string]$Name)
+    param([Parameter(Mandatory)][string]$Name, [switch]$AllowEmpty)
 
     $envPath = Join-Path $PSScriptRoot '.env'
     $pattern = '^\s*' + [regex]::Escape($Name) + '\s*=\s*(?:"(?<value>[^"]*)"|''(?<value>[^'']*)''|(?<value>[^#]*?))\s*(?:#.*)?$'
@@ -11,7 +11,7 @@ function Get-LocalSetting {
         }
     }
 
-    if ([string]::IsNullOrWhiteSpace($value)) {
+    if ($null -eq $value -or (-not $AllowEmpty -and [string]::IsNullOrWhiteSpace($value))) {
         throw "Не указан параметр $Name в .env"
     }
     return $value
