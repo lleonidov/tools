@@ -1,3 +1,4 @@
+import argparse
 import sys
 import re
 import uuid
@@ -12,7 +13,6 @@ TEMPLATE_CONTENT = """\
 // ВерсияОбработки: 1.0.0.1
 // ДатаИзменения: {date}
 // UUID: {ids[UUID]}
-// ClassId: {ids[ClassId]}
 // ObjectId: {ids[ObjectId]}
 // TypeId: {ids[TypeId]}
 // ValueId: {ids[ValueId]}
@@ -24,7 +24,7 @@ TEMPLATE_CONTENT = """\
     Ожидаем = КонтекстADD.Плагин("УтвержденияBDD");
 КонецПроцедуры
 
-Процедура ЗаполнитьНаборТестов(НаборТестов, КонтекстADD) Экспорт
+Процедура ЗаполнитьНаборТеса у втов(НаборТестов, КонтекстADD) Экспорт
     // НаборТестов.НачатьГруппу("Проверка запуска");
     НаборТестов.Добавить("Тест{name}");
 КонецПроцедуры
@@ -34,51 +34,66 @@ TEMPLATE_CONTENT = """\
 КонецПроцедуры
 """
 
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("Использование: addTestEPF.py <Имя> [unit|integration] [Теги] [Комментарий]")
 
-# Параметры
-if len(sys.argv) < 2:
-    sys.exit("Использование: addTestEPF.py <Имя> [unit|integration] [Теги] [Комментарий]")
+    name = sys.argv[1]
+    test_type = sys.argv[2].lower() if len(sys.argv) > 2 else "integration"
+    tags = sys.argv[3] if len(sys.argv) > 3 else ""
+    comment = sys.argv[4] if len(sys.argv) > 4 else ""
+    create_test(name, test_type, tags, comment)
 
-name = sys.argv[1]
-test_type = sys.argv[2].lower() if len(sys.argv) > 2 else "integration"
-tags = sys.argv[3] if len(sys.argv) > 3 else ""
-comment = sys.argv[4] if len(sys.argv) > 4 else ""
+def create_test(name, test_type, tags="", comment=""):
+    # Допускаем оба варианта написания
+    if test_type == "integretion":
+        test_type = "integration"
 
-# Допускаем оба варианта написания
-if test_type == "integretion":
-    test_type = "integration"
+    if test_type not in ("unit", "integration"):
+        sys.exit(f"Неизвестный тип теста: {test_type}")
 
-if test_type not in ("unit", "integration"):
-    sys.exit(f"Неизвестный тип теста: {test_type}")
+    # Проверка имени по правилам идентификаторов 1С
+    if not re.fullmatch(r"[А-Яа-яЁёA-Za-z_][А-Яа-яЁёA-Za-z_0-9]*", name):
+        sys.exit(f"Недопустимое имя теста: {name}")
 
-# Проверка имени по правилам идентификаторов 1С
-if not re.fullmatch(r"[А-Яа-яЁёA-Za-z_][А-Яа-яЁёA-Za-z_0-9]*", name):
-    sys.exit(f"Недопустимое имя теста: {name}")
+    # Путь относительно корня проекта
+    file_path = Path("src") / "tests" / test_type / "epf" / f"{name}.bsl"
 
-# Путь относительно корня проекта
-file_path = Path("src") / "tests" / test_type / "epf" / f"{name}.bsl"
+    if file_path.exists():
+        sys.exit(f"Файл уже существует: {file_path}")
 
-if file_path.exists():
-    sys.exit(f"Файл уже существует: {file_path}")
+    # Генерация UUID
+    ids = {
+        "UUID": str(uuid.uuid4()),
+        "ClassId": "c3831ec8-d8d5-4f93-8a22-f9bfae07327f",
+        "ObjectId": str(uuid.uuid4()),
+        "TypeId": str(uuid.uuid4()),
+        "ValueId": str(uuid.uuid4()),
+    }
 
-# Генерация UUID
-ids = {
-    "UUID": str(uuid.uuid4()),
-    "ClassId": "c3831ec8-d8d5-4f93-8a22-f9bfae07327f",
-    "ObjectId": str(uuid.uuid4()),
-    "TypeId": str(uuid.uuid4()),
-    "ValueId": str(uuid.uuid4()),
-}
+    date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
-date = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    # Шаблон BSL
+    content = TEMPLATE_CONTENT.format_map(locals())
 
-# Шаблон BSL
-content = TEMPLATE_CONTENT.format_map(locals())
+    # Создание файла
+    file_path.parent.mkdir(parents=True, exist_ok=True)
 
-# Создание файла
-file_path.parent.mkdir(parents=True, exist_ok=True)
+    with file_path.open("x", encoding="utf-8", newline="\n") as file:
+        file.write(content)
 
-with file_path.open("x", encoding="utf-8", newline="\n") as file:
-    file.write(content)
+    print(f"Создан тест: {file_path}")
 
-print(f"Создан тест: {file_path}")
+
+def run_for_type(test_type):
+    parser = argparse.ArgumentParser(
+        description=f"Создать шаблон {test_type}-теста для Vanessa ADD."
+    )
+    parser.add_argument("name", help="Имя теста")
+    parser.add_argument("--tags", default="", help="Теги теста")
+    parser.add_argument("--comment", default="", help="Комментарий к тесту")
+    args = parser.parse_args()
+    create_test(args.name, test_type, args.tags, args.comment)
+
+if __name__ == "__main__":
+    main()

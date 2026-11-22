@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ConfigDumpInfo xmlns="http://v8.1c.ru/8.3/xcf/dumpinfo" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="Hierarchical" version="2.21">
 	<ConfigVersions>
-		<Metadata name="Catalog.Номенклатура" id="2687f5a4-46ae-492b-8e86-0915d0b309e4" configVersion="8f7800abaa1c424d9384ea7504b27bf100000000">
+		<Metadata name="Catalog.Номенклатура" id="2687f5a4-46ae-492b-8e86-0915d0b309e4" configVersion="b513cfd54b0e2b468eb5ae33ea48350000000000">
 			<Metadata name="Catalog.Номенклатура.Attribute.Количество" id="fe4b7042-adeb-44de-bdbc-a29050f779ff"/>
 		</Metadata>
-		<Metadata name="Catalog.ТестовыйСправочник" id="fce57277-007c-4e58-8899-7437563d373f" configVersion="d30f56b8f8e25e47a4c67e6ae613163000000000"/>
-		<Metadata name="CommonModule.ЗапросMCP" id="85384d95-cb04-4ccb-8597-1c8aa80b51bd" configVersion="5388541fd4dd984381269729fb8d156400000000"/>
-		<Metadata name="CommonModule.ЗапросMCP.Module" id="85384d95-cb04-4ccb-8597-1c8aa80b51bd.0" configVersion="062bbc8211898b4084832b3626a99e2e00000000"/>
-		<Metadata name="Configuration.Конфигурация" id="e4aa21a1-0001-4e90-a8e6-960ee27b3cab" configVersion="05880ac7e54e6d419b30286c33fc86aa00000000"/>
-		<Metadata name="HTTPService.mcp1c" id="42ed5158-e554-48bd-bfda-2afd6c9bc4cc" configVersion="0ac4eba2537f404a8ceade0c073a3c3200000000">
+		<Metadata name="Catalog.ТестовыйСправочник" id="fce57277-007c-4e58-8899-7437563d373f" configVersion="01dcb2f636eda047a7ef1927ef62859a00000000"/>
+		<Metadata name="CommonModule.ЗапросMCP" id="85384d95-cb04-4ccb-8597-1c8aa80b51bd" configVersion="da494c5b5422094f97c54b7f27663cb300000000"/>
+		<Metadata name="CommonModule.ЗапросMCP.Module" id="85384d95-cb04-4ccb-8597-1c8aa80b51bd.0" configVersion="43aef8d96f639e44ab7f02bec9960f6400000000"/>
+		<Metadata name="Configuration.Конфигурация" id="e4aa21a1-0001-4e90-a8e6-960ee27b3cab" configVersion="2832bf65eaf95d45970bff0396dcc5ac00000000"/>
+		<Metadata name="HTTPService.mcp1c" id="42ed5158-e554-48bd-bfda-2afd6c9bc4cc" configVersion="e2b0234fab764d4dba3ac1cd4f63fe1000000000">
 			<Metadata name="HTTPService.mcp1c.URLTemplate.mcp1c.Method.post" id="1d82c184-c5b4-49c2-86fd-ccf2e83618d1"/>
 			<Metadata name="HTTPService.mcp1c.URLTemplate.mcp1c" id="e49d25f5-1573-4bb0-943d-35373f7102b7"/>
 		</Metadata>
-		<Metadata name="HTTPService.mcp1c.Module" id="42ed5158-e554-48bd-bfda-2afd6c9bc4cc.0" configVersion="d2df517ae56f2f46946ec53be598573e00000000"/>
-		<Metadata name="Language.Русский" id="4442fb06-fca3-4faa-8a6f-b0877bc46db7" configVersion="94ad115dd45f3749b9fdf90e3c339d4e00000000"/>
-		<Metadata name="Role.ПолныеПрава" id="95adfa5b-538d-4305-9ae9-9914a6fbe8ef" configVersion="fc402cb9b7782f4fa80631fede28944200000000"/>
-		<Metadata name="Role.ПолныеПрава.Rights" id="95adfa5b-538d-4305-9ae9-9914a6fbe8ef.0" configVersion="9132b79ded8cda429eff4ccab013b16800000000"/>
+		<Metadata name="HTTPService.mcp1c.Module" id="42ed5158-e554-48bd-bfda-2afd6c9bc4cc.0" configVersion="b6932d4c439dd9458efc35212e5da66900000000"/>
+		<Metadata name="Language.Русский" id="4442fb06-fca3-4faa-8a6f-b0877bc46db7" configVersion="3b16049069ef3140bde7babf2f3890c800000000"/>
+		<Metadata name="Role.ПолныеПрава" id="95adfa5b-538d-4305-9ae9-9914a6fbe8ef" configVersion="1d79cde065dbad45b802a6b7c31aef8700000000"/>
+		<Metadata name="Role.ПолныеПрава.Rights" id="95adfa5b-538d-4305-9ae9-9914a6fbe8ef.0" configVersion="cbd1243cae72634db877d459ac7a802600000000"/>
 	</ConfigVersions>
 </ConfigDumpInfo>

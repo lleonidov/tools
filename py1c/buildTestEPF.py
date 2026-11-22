@@ -1,11 +1,10 @@
+import argparse
 import json
-import re
 import shutil
 import sys
-import uuid
 from pathlib import Path
 
-import v8unpack
+from prepareMetadataTestEPF import prepare_metadata
 
 # Эталон: пустая внешняя обработка, распакованная v8unpack 1.2.15
 TEMPLATE_JSON = r'''{
@@ -64,61 +63,26 @@ TEMPLATE_JSON = r'''{
   "obj_version": "805"
 }'''
 
-CLASS_ID = "c3831ec8-d8d5-4f93-8a22-f9bfae07327f"
-
 # Параметры
-if len(sys.argv) != 3:
-    sys.exit("Использование: buildTestEPF.py <файл.bsl> <каталог_сборки|файл.epf>")
+parser = argparse.ArgumentParser(description="Подготовить и собрать тестовую обработку.")
+parser.add_argument("bsl", type=Path, help="Исходный файл BSL")
+parser.add_argument("output", type=Path, help="Каталог сборки или путь к файлу EPF")
+parser.add_argument("--prepare-only", action="store_true", help="Только подготовить файлы обработки")
+args = parser.parse_args()
+bsl_path = args.bsl
 
-bsl_path = Path(sys.argv[1])
+try:
+    fields = prepare_metadata(bsl_path)
+except (ValueError, OSError, UnicodeError) as error:
+    sys.exit(str(error))
 
-if not bsl_path.is_file() or bsl_path.suffix.lower() != ".bsl":
-    sys.exit(f"Не найден BSL: {bsl_path}")
-
-name = bsl_path.stem
-
-if not re.fullmatch(r"[А-Яа-яЁёA-Za-z_][А-Яа-яЁёA-Za-z_0-9]*", name):
-    sys.exit(f"Недопустимое имя обработки: {name}")
-
-# Чтение метаданных из заголовка BSL
-source = bsl_path.read_text(encoding="utf-8-sig")
-fields = {}
-
-for line in source.splitlines():
-    if not line.strip():
-        continue
-
-    if not line.lstrip().startswith("//"):
-        break
-
-    match = re.match(r"\s*//\s*([^:]+):\s*(.*)", line)
-
-    if match:
-        fields[match.group(1).strip()] = match.group(2).strip()
-
-# Получение и проверка UUID
-ids = {}
-
-for key in ("UUID", "ObjectId", "TypeId", "ValueId", "ClassId"):
-    if not fields.get(key):
-        sys.exit(f"В заголовке BSL отсутствует поле {key}")
-
-    try:
-        ids[key] = str(uuid.UUID(fields[key]))
-    except ValueError:
-        sys.exit(f"Неверный UUID для {key}: {fields[key]}")
-
-if ids["ClassId"] != CLASS_ID:
-    sys.exit("Неверный ClassId")
-
-if len({ids[key] for key in ("UUID", "ObjectId", "TypeId", "ValueId")}) != 4:
-    sys.exit("UUID, ObjectId, TypeId и ValueId должны различаться")
-
-synonym = fields.get("Синоним") or name
-comment = fields.get("Комментарий", "")
+name = fields["Имя"]
+synonym = fields["Синоним"]
+comment = fields["Комментарий"]
+ids = fields
 
 # Определение путей
-output_arg = Path(sys.argv[2])
+output_arg = args.output
 
 epf_path = (
     output_arg
@@ -164,7 +128,13 @@ shutil.copyfile(
     encoding="utf-8",
 )
 
+if args.prepare_only:
+    print(f"Подготовлено: {src_dir}")
+    sys.exit(0)
+
 # Сборка EPF
+import v8unpack
+
 # Удаляем предыдущую сборку, чтобы при ошибке не осталось старого результата
 epf_path.unlink(missing_ok=True)
 
